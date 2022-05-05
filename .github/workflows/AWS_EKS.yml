@@ -12,9 +12,8 @@ env:
   CONTAINER_NAME: my_app
   REGISTRY: ghcr.io
   IMAGE_NAME: gladandres/test
-  IMAGE: static-site
+  KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
 
-  DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
   
 jobs:
   deploy:
@@ -51,16 +50,20 @@ jobs:
       with:
         context: .
         push: true
+        add_git_labels: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
+    # - name: Conect and Using k8s
+    #   uses: actions-hub/kubectl@master
+    #   with:
+    #     args: get pods
     
+    # - name: Build and push CONTAINER_NAME
+    #   uses: ianbelcher/eks-kubectl-action@master
+    #   with:
+    #     cluster_name: ${{ env.CLUSTER_NAME }}
+    #     args: set image --record deployment/nginx nginx=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} #${{ steps.build.outputs.IMAGE_URL }}
     
-    - name: Build and push CONTAINER_NAME
-      uses: ianbelcher/eks-kubectl-action@master
-      with:
-        cluster_name: ${{ env.CLUSTER_NAME }}
-        args: set image --record deployment/nginx nginx=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} #${{ steps.build.outputs.IMAGE_URL }}
-    
-    - name: Use the output
-      run: echo "{{ steps.kubectl.outputs.kubectl-out }}"
+    # - name: Use the output
+    #   run: echo "{{ steps.kubectl.outputs.kubectl-out }}"
