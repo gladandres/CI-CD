@@ -56,7 +56,7 @@ jobs:
 
     
     - name: Build and push CONTAINER_NAME
-      uses: ianbelcher/eks-kubectl-action@v1
+      uses: ianbelcher/eks-kubectl-action@master
       with:
         cluster_name: ${{ secrets.CLUSTER_NAME }}
         args: set image --record deployment/pod-name pod-name=${{ steps.build.outputs.IMAGE_URL }}
