@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - master
-    tags:
-      - 'v*'
+    # tags:
+    #   - 'v*'
 
 env:
 
@@ -13,7 +13,7 @@ env:
   CLUSTER_NAME: terragunt-kluster
   CONTAINER_NAME: my_app
   REGISTRY: ghcr.io
-  IMAGE_NAME: gladandres/test
+  IMAGE_NAME: gladandres/nginx
   KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
 
   
@@ -52,10 +52,9 @@ jobs:
       with:
         context: .
         push: true
-        add_git_labels: true
-        tags: latest
-        labels: ${{ steps.meta.outputs.labels }}
+        tags: gladandres/nginx:latest
 
+        
     # - name: Conect and Using k8s
     #   uses: actions-hub/kubectl@master
     #   with:
