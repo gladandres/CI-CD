@@ -57,7 +57,8 @@ jobs:
         context: .
         push: true
         #tags: type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/v0.') }}
-        tags: ${{ steps.meta.outputs.tags }}
+        tags: latest,1.0.0
+        #tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
 
