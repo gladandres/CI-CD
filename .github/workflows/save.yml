@@ -16,6 +16,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag=${{env.REGISTRY}}/${{env.OWNEWR}}/${{env.CONTAINER_NAME}}:$(date +%s)
+#     - uses: actions/checkout@v3
+#     - name: Build the Docker image
+#       run: docker build . --file Dockerfile --tag=${{env.REGISTRY}}/${{env.OWNEWR}}/${{env.CONTAINER_NAME}}:$(date +%s)
+      
+    - name: Log in to the Container registry
+      uses: docker/login-action@v1.14.1
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.MY_SECRET_2021 }}
+        
+#     - name: Extract metadata (tags, labels) for Docker
+#       id: meta
+#       uses: docker/metadata-action@v2
+#       with:
+#         images: ${{ env.REGISTRY }}/${{ env.OWNEWR }}/${{ env.CONTAINER_NAME }}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: gladandres/nginx:latest
