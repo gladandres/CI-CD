@@ -8,6 +8,7 @@ on:
 env:
 
   AWS_REGION: eu-west-1                   # set this to your preferred AWS region, e.g. us-west-1
+  CLUSTER_NAME: terragunt-kluster
   CONTAINER_NAME: my_app
   REGISTRY: ghcr.io
   IMAGE_NAME: gladandres/test
@@ -53,10 +54,13 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
-
+    
     
     - name: Build and push CONTAINER_NAME
       uses: ianbelcher/eks-kubectl-action@master
       with:
-        cluster_name: ${{ secrets.CLUSTER_NAME }}
+        cluster_name: ${{ env.CLUSTER_NAME }}
         args: set image --record deployment/pod-name pod-name=${{ steps.build.outputs.IMAGE_URL }}
+    
+    - name: Use the output
+      run: echo "{{ steps.kubectl.outputs.kubectl-out }}"
