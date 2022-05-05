@@ -3,7 +3,7 @@ name: Build and Deploy to EKS
 on:
   push:
     branches:
-      - dev
+      - master,dev,v1
 
 env:
 
