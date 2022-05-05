@@ -11,7 +11,7 @@ env:
   AWS_REGION: eu-west-1                   # set this to your preferred AWS region, e.g. us-west-1
   CONTAINER_NAME: my_app
   REGISTRY: ghcr.io
-  IMAGE_NAME: gladandres
+  IMAGE_NAME: gladandres/test
   IMAGE: static-site
 
   DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
