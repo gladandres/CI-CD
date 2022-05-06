@@ -57,7 +57,15 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
-    
+    - name: deploy to cluster
+      uses: qazz92/kubectl@1.0.3
+      env:
+        kube_confg_data: ${{ secrets.KUBE_CONFIG }}
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws_region: eu-west-1
+      with:
+        args: get nodes
     
     # - name: Build and push CONTAINER_NAME
     #   uses: ianbelcher/eks-kubectl-action@master
@@ -68,8 +76,8 @@ jobs:
     # - name: Use the output
     #   run: echo "{{ steps.kubectl.outputs.kubectl-out }}"
 
-    - name: Conect and Using k8s
-      uses: actions-hub/kubectl@master
-      with:
-          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
-    - run: get pods
+    # - name: Conect and Using k8s
+    #   uses: actions-hub/kubectl@master
+    #   with:
+    #       base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+    # - run: get pods
