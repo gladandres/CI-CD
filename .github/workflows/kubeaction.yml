@@ -57,13 +57,13 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
-    - name: deploy to cluster
+    - name: get nodes to cluster
       uses: qazz92/kubectl@1.0.3
       env:
         kube_confg_data: ${{ secrets.KUBE_CONFIG }}
         aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        #aws_region: eu-west-1
+        aws_region: eu-west-1
       with:
         args: get nodes
     
