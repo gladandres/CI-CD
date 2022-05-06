@@ -14,4 +14,4 @@ jobs:
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws_region: eu-west-1
       with:
-        args: set image
+        args: get nodes
