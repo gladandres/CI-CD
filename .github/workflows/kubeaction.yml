@@ -1,17 +1,13 @@
-name: Get pods
-on: [push]
-
+on: push
+name: deploy
 jobs:
   deploy:
-    name: Deploy
+    name: deploy to cluster
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-
-      - uses: actions-hub/kubectl@master
-        with:
-          args: get pods
+    - uses: actions/checkout@master
+    - name: deploy to cluster
+      uses: steebchen/kubectl@v2.0.0
+      with: # defaults to latest kubectl binary version
+        config: ${{ secrets.KUBE_CONFIG }}
+        command: get svc
