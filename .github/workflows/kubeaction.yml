@@ -1,13 +1,75 @@
-on: push
-name: deploy
+name: Build and Deploy to EKS
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+
+  AWS_REGION: eu-west-1                   # set this to your preferred AWS region, e.g. us-west-1
+  CLUSTER_NAME: terragunt-kluster
+  KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+
+  CONTAINER_NAME: my_app
+  
+  REGISTRY: ghcr.io
+  IMAGE_NAME: gladandres/test
+  IMAGE: static-site
+
+  DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
+  
 jobs:
   deploy:
-    name: deploy to cluster
+    name: Deploy
     runs-on: ubuntu-latest
+    environment: pet
+
     steps:
-    - uses: actions/checkout@master
-    - name: deploy to cluster
-      uses: steebchen/kubectl@v2.0.0
-      with: # defaults to latest kubectl binary version
-        config: ${{ secrets.KUBE_CONFIG }}
-        command: get svc
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Log in to the Container registry
+      uses: docker/login-action@v1.14.1
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.MY_SECRET_2021 }}
+        
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v2
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+
+    
+    
+    # - name: Build and push CONTAINER_NAME
+    #   uses: ianbelcher/eks-kubectl-action@master
+    #   with:
+    #     cluster_name: ${{ env.CLUSTER_NAME }}
+    #     args: set image --record deployment/nginx nginx=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} #${{ steps.build.outputs.IMAGE_URL }}
+    
+    # - name: Use the output
+    #   run: echo "{{ steps.kubectl.outputs.kubectl-out }}"
+
+    - name: Conect and Using k8s
+      uses: actions-hub/kubectl@master
+      with:
+          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+    - run: get pods
