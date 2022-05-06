@@ -2,13 +2,16 @@ on: push
 name: deploy
 jobs:
   deploy:
-    name: deploy to cluster
+    name: Deploy to cluster
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - name: deploy to cluster
-      uses: steebchen/kubectl@v2.0.0
-      with: # defaults to latest kubectl binary version
-        config: ${{ secrets.KUBE_CONFIG }}
-        version: 'v1.22'
-        command: get svc
+      uses: qazz92/kubectl@1.0.3
+      env:
+        kube_confg_data: ${{ secrets.KUBE_CONFIG }}
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws_region: eu-west-1
+      with:
+        args: set image
