@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # This workflow will build and push a new container image to Amazon ECR,
 # and then will deploy a new task definition to Amazon ECS, when there is a push to the "master" branch.
 #
@@ -25,10 +26,14 @@
 #    and best practices on handling the access key credentials.
 
 name: Deploy to Amazon ECS
+=======
+name: Build and Deploy to EKS
+>>>>>>> 08738e7a7b1f5d587a3ac7871f7be2be1d9e4147
 
 on:
   push:
     branches:
+<<<<<<< HEAD
       - "ci-cd_ECS_python_app"
 
 env:
@@ -45,11 +50,33 @@ env:
 permissions:
   contents: read
 
+=======
+      - master
+
+env:
+
+  AWS_REGION: eu-west-1                   # set this to your preferred AWS region, e.g. us-west-1
+  CLUSTER_NAME: terragunt-kluster
+  KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+
+  CONTAINER_NAME: my_app
+  
+  REGISTRY: ghcr.io
+  IMAGE_NAME: gladandres/test
+  IMAGE: static-site
+
+  DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
+  
+>>>>>>> 08738e7a7b1f5d587a3ac7871f7be2be1d9e4147
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+<<<<<<< HEAD
     environment: test
+=======
+    environment: pet
+>>>>>>> 08738e7a7b1f5d587a3ac7871f7be2be1d9e4147
 
     steps:
     - name: Checkout
@@ -62,6 +89,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
+<<<<<<< HEAD
     # - name: Log in to the Container registry
     #   uses: docker/login-action@v1.14.1
     #   with:
@@ -115,3 +143,50 @@ jobs:
         service: ${{ env.ECS_SERVICE }}
         cluster: ${{ env.ECS_CLUSTER }}
         wait-for-service-stability: true
+=======
+    - name: Log in to the Container registry
+      uses: docker/login-action@v1.14.1
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.MY_SECRET_2021 }}
+        
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v2
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+
+    - name: get nodes to cluster
+      uses: qazz92/kubectl@1.0.3
+      env:
+        kube_confg_data: ${{ secrets.KUBE_CONFIG }}
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws_region: eu-west-1
+      with:
+        args: get nodes
+    
+    # - name: Build and push CONTAINER_NAME
+    #   uses: ianbelcher/eks-kubectl-action@master
+    #   with:
+    #     cluster_name: ${{ env.CLUSTER_NAME }}
+    #     args: set image --record deployment/nginx nginx=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} #${{ steps.build.outputs.IMAGE_URL }}
+    
+    # - name: Use the output
+    #   run: echo "{{ steps.kubectl.outputs.kubectl-out }}"
+
+    # - name: Conect and Using k8s
+    #   uses: actions-hub/kubectl@master
+    #   with:
+    #       base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+    # - run: get pods
+>>>>>>> 08738e7a7b1f5d587a3ac7871f7be2be1d9e4147
