@@ -39,7 +39,7 @@ env:
   ECR_REPOSITORY: application          # set this to your Amazon ECR repository name
   ECS_SERVICE: Test_Service                 # set this to your Amazon ECS service name
   ECS_CLUSTER: ECS-Fargate                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: Test_CI-CD # set this to the path to your Amazon ECS task definition
+  ECS_TASK_DEFINITION: task-definition.json # set this to the path to your Amazon ECS task definition
   #REGISTRY: ghcr.io
 
   CONTAINER_NAME: Test           # set this to the name of the container in the
