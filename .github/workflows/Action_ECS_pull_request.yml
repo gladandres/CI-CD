@@ -17,7 +17,7 @@ env:
   # ECS_SERVICE: Test_Service                 # set this to your Amazon ECS service name
   # ECS_CLUSTER: ECS-Fargate                 # set this to your Amazon ECS cluster name
   # ECS_TASK_DEFINITION: .aws/task-definition_stage.json # set this to the path to your Amazon ECS task definition
-  CONTAINER_NAME: Test           # set this to the name of the container in the
+  CONTAINER_NAME: Prod          # set this to the name of the container in the
 
 
 permissions:
