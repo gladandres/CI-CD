@@ -30,6 +30,7 @@ on:
   push:
     branches:
       - "ci-cd_ECS_python_app"
+    
   pull_request:
     types:
       - "closed"
@@ -39,11 +40,9 @@ env:
   ECR_REPOSITORY: application          # set this to your Amazon ECR repository name
   ECS_SERVICE: Test_Service                 # set this to your Amazon ECS service name
   ECS_CLUSTER: ECS-Fargate                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: .aws/task-definition.json # set this to the path to your Amazon ECS task definition
-  #REGISTRY: ghcr.io
-
+  ECS_TASK_DEFINITION: .aws/task-definition_stage.json # set this to the path to your Amazon ECS task definition
   CONTAINER_NAME: Test           # set this to the name of the container in the
-                                 # containerDefinitions section of your task definition
+
 
 permissions:
   contents: read
@@ -51,6 +50,10 @@ permissions:
 jobs:
   deploy:
     name: Deploy
+
+    # if: ${{ github.event.issue.pull_request }}
+      
+
     runs-on: ubuntu-latest
     environment: test
 
@@ -65,26 +68,6 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-    # - name: Log in to the Container registry
-    #   uses: docker/login-action@v1.14.1
-    #   with:
-    #     registry: ${{ env.REGISTRY }}
-    #     username: ${{ github.actor }}
-    #     password: ${{ secrets.MY_SECRET_2021 }}
-
-    # - name: Extract metadata (tags, labels) for Docker
-    #   id: meta
-    #   uses: docker/metadata-action@v2
-    #   with:
-    #     images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-    # - name: Build and push Docker image
-    #   uses: docker/build-push-action@v2
-    #   with:
-    #     context: .
-    #     push: true
-    #     tags: ${{ steps.meta.outputs.tags }}
-    #     labels: ${{ steps.meta.outputs.labels }}
 
     - name: Login to Amazon ECR
       id: login-ecr
@@ -105,13 +88,21 @@ jobs:
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      if: ${{ github.event.issue.pull_request }}
+      env:
+        ECS_TASK_DEFINITION: .aws/task-definition_prod.json
+        CONTAINER_NAME: Prod
+      uses: aws-actions/amazon-ecs-render-task-definition@v1     
       with:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
         container-name: ${{ env.CONTAINER_NAME }}
         image: ${{ steps.build-image.outputs.image }}
 
     - name: Deploy Amazon ECS task definition
+      if: ${{ github.event.issue.pull_request }}
+      env:
+        ECS_SERVICE: Prod_Service
+        ECS_CLUSTER: ECS-Fargate  
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
