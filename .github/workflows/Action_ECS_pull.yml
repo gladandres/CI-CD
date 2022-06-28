@@ -7,9 +7,9 @@ on:
     branches:
       - "ci-cd_ECS_python_app"
     
-  pull_request:
-    types:
-      - "closed"
+  # pull_request:
+  #   types:
+  #     - "closed"
 
 env:
   AWS_REGION: eu-west-1                   
@@ -26,7 +26,7 @@ permissions:
 jobs:
   deploy_stage:
     name: Deploy Stage
-    if: ${{github.event.issue.push}}
+    # if: ${{github.event.issue.push}}
     env:
       ECS_SERVICE: Test_Service                 # set this to your Amazon ECS service name
       ECS_CLUSTER: ECS-Fargate                 # set this to your Amazon ECS cluster name
