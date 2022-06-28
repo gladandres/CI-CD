@@ -3,9 +3,9 @@
 name: Deploy to Amazon ECS
 
 on:
-  push:
-    branches:
-      - "ci-cd_ECS_python_app"
+  # push:
+  #   branches:
+  #     - "ci-cd_ECS_python_app"
     
   pull_request:
     types:
