@@ -33,8 +33,6 @@ on:
   pull_request:
     types:
       - "closed"
-    branches:
-      - "ci-cd_ECS_python_app"
 
 env:
   AWS_REGION: eu-west-1                   
