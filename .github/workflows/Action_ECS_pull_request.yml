@@ -1,6 +1,6 @@
 
 
-name: Deploy to Amazon ECS
+name: Deploy to Amazon ECS to Prod
 
 on:
   # push:
