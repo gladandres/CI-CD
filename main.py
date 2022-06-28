@@ -9,7 +9,7 @@ uuid = uuid4()
 @app.get("/api/v1/uuid")
 async def root(key: Optional[str] = Cookie(None)):
     print(key)
-    return {'uuid_new': uuid}
+    return {'uuid_new_function': uuid}
 
 
 @app.get("/healthz")
