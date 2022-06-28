@@ -32,7 +32,7 @@ on:
       - "ci-cd_ECS_python_app"
   pull_request:
     branches:
-    - main
+    - master
 
 env:
   AWS_REGION: eu-west-1                   
