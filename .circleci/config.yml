@@ -26,7 +26,7 @@ workflows:
           push-image: true
           region: eu-west-1 #AWS_REGION
           registry-id: AWS_ECR_REGISTRY_ID
-          repo: myECRRepository
+          repo: application
           repo-scan-on-push: true
           #role-arn: 'arn:aws:iam::123456789012:role/testing'
           skip-when-tags-exist: false
