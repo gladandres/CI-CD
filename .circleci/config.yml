@@ -25,7 +25,7 @@ workflows:
           public-registry: false
           push-image: true
           region: eu-west-1 #AWS_REGION
-          registry-id: "239699409863" #AWS_ECR_REGISTRY_ID
+          registry-id: AWS_ECR_REGISTRY_ID
           repo: myECRRepository
           repo-scan-on-push: true
           #role-arn: 'arn:aws:iam::123456789012:role/testing'
