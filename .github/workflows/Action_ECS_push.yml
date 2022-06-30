@@ -5,7 +5,8 @@ name: Deploy to Amazon ECS to Staging
 on:
   push:
     branches:
-      - "ci-cd_ECS_python_app"
+      # - "ci-cd_ECS_python_app"
+      - "master"
     
   # pull_request:
   #   types:
